@@ -1,0 +1,16 @@
+# ===== Visual Studio =====
+.vs/
+**/bin/
+**/obj/
+
+# ===== ASP.NET =====
+*.user
+*.suo
+
+# ===== React / Node =====
+node_modules/
+build/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
