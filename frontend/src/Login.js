@@ -1,39 +1,24 @@
-import React, { useState } from "react";
+const login = async () => {
+  try {
+    const response = await fetch("https://localhost:7234/api/Auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        passwordHash: password
+      })
+    });
 
-function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const text = await response.text();
+    alert(text);
 
-  const handleLogin = () => {
-    alert("Email: " + email + "\nPassword: " + password);
-  };
-
-  return (
-    <div>
-      <h2>Login</h2>
-
-      <div>
-        <label>Email:</label><br />
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label>Password:</label><br />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <br />
-      <button onClick={handleLogin}>Login</button>
-    </div>
-  );
-}
-
-export default Login;
+    if (response.ok) {
+      localStorage.setItem("isLoggedIn", "true");
+      setIsLoggedIn(true);
+    }
+  } catch (error) {
+    console.error("Login failed", error);
+  }
+};
