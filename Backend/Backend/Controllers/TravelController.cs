@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Backend.Data;
+using Backend.Models;
+using Microsoft.AspNetCore.Mvc;
+using TravelPlannerAPI.Models;
+
 
 namespace TravelPlannerAPI.Controllers
 {
@@ -6,39 +10,59 @@ namespace TravelPlannerAPI.Controllers
     [Route("api/[controller]")]
     public class TravelController : ControllerBase
     {
-        [HttpGet("suggestions")]
-        public IActionResult GetSuggestions()
-        {
-            var result = new
-            {
-                preferences = new
-                {
-                    weather = "Warm",
-                    tripLength = "7 days",
-                    style = "Comfort & Convenience"
-                },
-                destinations = new[]
-                {
-                    new
-                    {
-                        name = "Bali, Indonesia",
-                        reason = "Warm beaches, relaxed vibe, great resorts",
-                        flight = "Round trip – ₹45,000 (fake)",
-                        hotel = "Beach Resort – ₹6,000/night",
-                        activities = new[] { "Beach", "Spa", "Temple visits" }
-                    },
-                    new
-                    {
-                        name = "Phuket, Thailand",
-                        reason = "Easy travel, beautiful beaches, good food",
-                        flight = "Round trip – ₹40,000 (fake)",
-                        hotel = "Sea View Hotel – ₹5,000/night",
-                        activities = new[] { "Island hopping", "Snorkeling" }
-                    }
-                }
-            };
+        private readonly AppDbContext _context;
 
-            return Ok(result);
+        public TravelController(AppDbContext context)
+        {
+            _context = context;
         }
+        [HttpPost("suggestions")]
+        public IActionResult GetSuggestions(TravelRequest request)
+        {
+            var trips = new List<Trip>
+    {
+        new Trip { Destination = "Bali", Description = "Warm beaches and relaxed vibe", UserId = 1 },
+        new Trip { Destination = "Maldives", Description = "Luxury beach comfort", UserId = 1 },
+        new Trip { Destination = "Thailand", Description = "Affordable and fun", UserId = 1 }
+    };
+
+            _context.Trips.AddRange(trips);
+            _context.SaveChanges();
+
+            return Ok(trips);
+        }
+
+
+
+        //[HttpPost("suggestions")]
+        //public IActionResult GetSuggestions([FromBody] TravelRequest request)
+        //{
+        //    var suggestions = new List<object>();
+
+        //    if (request.Warm && request.Beach)
+        //    {
+        //        suggestions.Add(new
+        //        {
+        //            destination = "Bali",
+        //            description = "Warm weather, beaches, relaxed and comfortable"
+        //        });
+
+        //        suggestions.Add(new
+        //        {
+        //            destination = "Maldives",
+        //            description = "Luxury beach destination with comfort"
+        //        });
+        //    }
+
+        //    suggestions.Add(new
+        //    {
+        //        destination = "Thailand",
+        //        description = "Affordable, warm and fun"
+        //    });
+
+        //    return Ok(suggestions);
+        //}
+
+
     }
 }

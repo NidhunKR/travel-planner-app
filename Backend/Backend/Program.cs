@@ -1,25 +1,38 @@
+﻿using Backend.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        "Server=(localdb)\\MSSQLLocalDB;Database=TravelPlannerDB;Trusted_Connection=True;"
+    ));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// 👇 ADD THIS
+builder.Services.AddCors(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    options.AddPolicy("AllowReact",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// 👇 ADD THIS (order matters)
+app.UseCors("AllowReact");
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
