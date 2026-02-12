@@ -15,16 +15,19 @@ builder.Services.AddSwaggerGen();
 // 👇 ADD THIS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact",
+    options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
         });
 });
 
+
 var app = builder.Build();
+app.UseCors("AllowAll");
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
