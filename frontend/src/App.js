@@ -20,7 +20,7 @@ function App() {
 
   // ---------- REGISTER ----------
   const register = async () => {
-    const response = await fetch("https://localhost:7234/api/Auth/register", {
+    const response = await fetch("https://travel-planner-app-lvlt.onrender.com/api/Auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -40,7 +40,7 @@ function App() {
 
   // ---------- LOGIN ----------
   const login = async () => {
-    const response = await fetch("https://localhost:7234/api/Auth/login", {
+    const response = await fetch("https://travel-planner-app-lvlt.onrender.com/api/Auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -68,7 +68,7 @@ function App() {
   // ---------- GET TRAVEL SUGGESTIONS ----------
   const getSuggestions = async () => {
     const response = await fetch(
-      "https://localhost:7234/api/Travel/suggestions",
+      "https://travel-planner-app-lvlt.onrender.com/api/Travel/suggestions",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
