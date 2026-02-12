@@ -1,33 +1,37 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Backend.Data;
+using Microsoft.EntityFrameworkCore;
 
-// Add services
+var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddControllers();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        "Server=(localdb)\\MSSQLLocalDB;Database=TravelPlannerDB;Trusted_Connection=True;"
+    ));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ✅ CORS FIX (IMPORTANT)
+// ✅ FIXED CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
+    options.AddPolicy("AllowReact",
         policy =>
         {
             policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
         });
 });
 
 var app = builder.Build();
 
-// Use CORS
-app.UseCors("AllowAll");
+app.UseSwagger();
+app.UseSwaggerUI();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseCors("AllowReact");
 
+app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
