@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+const API = "https://localhost:7234"; // ✅ local backend
+
 function App() {
   // ---------- AUTH STATE ----------
   const [email, setEmail] = useState("");
@@ -20,41 +22,49 @@ function App() {
 
   // ---------- REGISTER ----------
   const register = async () => {
-    const response = await fetch("https://travel-planner-app-lvlt.onrender.com/api/Auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        passwordHash: password
-      })
-    });
+    try {
+      const response = await fetch(`${API}/api/Auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          passwordHash: password
+        })
+      });
 
-    const text = await response.text();
-    setMessage(text);
+      const text = await response.text();
+      setMessage(text);
 
-    if (response.ok) {
-      localStorage.setItem("isLoggedIn", "true");
-      setIsLoggedIn(true);
+      if (response.ok) {
+        localStorage.setItem("isLoggedIn", "true");
+        setIsLoggedIn(true);
+      }
+    } catch (err) {
+      setMessage("Backend not reachable");
     }
   };
 
   // ---------- LOGIN ----------
   const login = async () => {
-    const response = await fetch("https://travel-planner-app-lvlt.onrender.com/api/Auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        passwordHash: password
-      })
-    });
+    try {
+      const response = await fetch(`${API}/api/Auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          passwordHash: password
+        })
+      });
 
-    const text = await response.text();
-    setMessage(text);
+      const text = await response.text();
+      setMessage(text);
 
-    if (response.ok) {
-      localStorage.setItem("isLoggedIn", "true");
-      setIsLoggedIn(true);
+      if (response.ok) {
+        localStorage.setItem("isLoggedIn", "true");
+        setIsLoggedIn(true);
+      }
+    } catch (err) {
+      setMessage("Backend not reachable");
     }
   };
 
@@ -67,9 +77,8 @@ function App() {
 
   // ---------- GET TRAVEL SUGGESTIONS ----------
   const getSuggestions = async () => {
-    const response = await fetch(
-      "https://travel-planner-app-lvlt.onrender.com/api/Travel/suggestions",
-      {
+    try {
+      const response = await fetch(`${API}/api/Travel/suggestions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -78,11 +87,13 @@ function App() {
           days,
           comfortLevel
         })
-      }
-    );
+      });
 
-    const data = await response.json();
-    setSuggestions(data);
+      const data = await response.json();
+      setSuggestions(data);
+    } catch (err) {
+      setMessage("Failed to fetch suggestions");
+    }
   };
 
   // ---------- UI ----------
