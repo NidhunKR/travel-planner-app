@@ -1,36 +1,29 @@
 import React, { useState } from "react";
 
-// ✅ Correct backend URL (NO trailing slash)
-const API = "https://travel-planner-backend-kaym.onrender.com";
+const API = "https://travel-planner-backend-kaym.onrender.com/";
 
 function App() {
-  // ---------- AUTH STATE ----------
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("isLoggedIn") === "true"
   );
 
-  // ---------- TRAVEL FORM STATE ----------
   const [warm, setWarm] = useState(true);
   const [beach, setBeach] = useState(true);
   const [days, setDays] = useState(7);
   const [comfortLevel, setComfortLevel] = useState("Comfort");
-
   const [suggestions, setSuggestions] = useState([]);
 
-  // ---------- REGISTER ----------
+  // ---------- API FUNCTIONS ----------
+
   const register = async () => {
     try {
-      const response = await fetch(`${API}/api/Auth/register`, {
+      const response = await fetch(`${API}api/Auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          passwordHash: password
-        })
+        body: JSON.stringify({ email, passwordHash: password })
       });
 
       const text = await response.text();
@@ -40,21 +33,17 @@ function App() {
         localStorage.setItem("isLoggedIn", "true");
         setIsLoggedIn(true);
       }
-    } catch (err) {
+    } catch {
       setMessage("Backend not reachable");
     }
   };
 
-  // ---------- LOGIN ----------
   const login = async () => {
     try {
-      const response = await fetch(`${API}/api/Auth/login`, {
+      const response = await fetch(`${API}api/Auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          passwordHash: password
-        })
+        body: JSON.stringify({ email, passwordHash: password })
       });
 
       const text = await response.text();
@@ -64,122 +53,168 @@ function App() {
         localStorage.setItem("isLoggedIn", "true");
         setIsLoggedIn(true);
       }
-    } catch (err) {
+    } catch {
       setMessage("Backend not reachable");
     }
   };
 
-  // ---------- LOGOUT ----------
   const logout = () => {
     localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
     setSuggestions([]);
   };
 
-  // ---------- GET TRAVEL SUGGESTIONS ----------
   const getSuggestions = async () => {
     try {
-      const response = await fetch(`${API}/api/Travel/suggestions`, {
+      const response = await fetch(`${API}api/Travel/suggestions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          warm,
-          beach,
-          days,
-          comfortLevel
-        })
+        body: JSON.stringify({ warm, beach, days, comfortLevel })
       });
 
       const data = await response.json();
       setSuggestions(data);
-    } catch (err) {
+    } catch {
       setMessage("Failed to fetch suggestions");
     }
   };
 
+  // ---------- STYLES ----------
+
+  const styles = {
+    page: {
+      minHeight: "100vh",
+      background: "#f5f7fb",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontFamily: "Arial"
+    },
+    card: {
+      background: "white",
+      padding: "30px",
+      borderRadius: "12px",
+      width: "400px",
+      boxShadow: "0 8px 20px rgba(0,0,0,0.1)"
+    },
+    input: {
+      width: "100%",
+      padding: "10px",
+      margin: "8px 0",
+      borderRadius: "6px",
+      border: "1px solid #ccc"
+    },
+    button: {
+      width: "100%",
+      padding: "12px",
+      marginTop: "10px",
+      borderRadius: "6px",
+      border: "none",
+      background: "#4f46e5",
+      color: "white",
+      fontWeight: "bold",
+      cursor: "pointer"
+    },
+    resultCard: {
+      background: "#eef2ff",
+      padding: "12px",
+      borderRadius: "8px",
+      marginTop: "10px"
+    }
+  };
+
   // ---------- UI ----------
+
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Travel Planner</h1>
-      <p>{message}</p>
+    <div style={styles.page}>
+      <div style={styles.card}>
+        <h1 style={{ textAlign: "center" }}>🌍 Travel Planner</h1>
+        <p style={{ color: "red" }}>{message}</p>
 
-      {!isLoggedIn ? (
-        <>
-          <h2>Register</h2>
-          <input placeholder="Email" onChange={e => setEmail(e.target.value)} />
-          <br />
-          <input
-            placeholder="Password"
-            type="password"
-            onChange={e => setPassword(e.target.value)}
-          />
-          <br />
-          <button onClick={register}>Register</button>
-
-          <h2>Login</h2>
-          <input placeholder="Email" onChange={e => setEmail(e.target.value)} />
-          <br />
-          <input
-            placeholder="Password"
-            type="password"
-            onChange={e => setPassword(e.target.value)}
-          />
-          <br />
-          <button onClick={login}>Login</button>
-        </>
-      ) : (
-        <>
-          <h2>Travel Preferences</h2>
-
-          <label>
+        {!isLoggedIn ? (
+          <>
             <input
-              type="checkbox"
-              checked={warm}
-              onChange={() => setWarm(!warm)}
+              style={styles.input}
+              placeholder="Email"
+              onChange={e => setEmail(e.target.value)}
             />
-            Warm country
-          </label>
-          <br />
-
-          <label>
             <input
-              type="checkbox"
-              checked={beach}
-              onChange={() => setBeach(!beach)}
+              style={styles.input}
+              type="password"
+              placeholder="Password"
+              onChange={e => setPassword(e.target.value)}
             />
-            Beach
-          </label>
-          <br />
 
-          <input
-            type="number"
-            value={days}
-            onChange={e => setDays(Number(e.target.value))}
-            placeholder="Days"
-          />
-          <br />
+            <button style={styles.button} onClick={register}>
+              Register
+            </button>
 
-          <input
-            placeholder="Comfort level"
-            value={comfortLevel}
-            onChange={e => setComfortLevel(e.target.value)}
-          />
-          <br />
+            <button
+              style={{ ...styles.button, background: "#16a34a" }}
+              onClick={login}
+            >
+              Login
+            </button>
+          </>
+        ) : (
+          <>
+            <h3>Travel Preferences</h3>
 
-          <button onClick={getSuggestions}>Get Suggestions</button>
+            <label>
+              <input
+                type="checkbox"
+                checked={warm}
+                onChange={() => setWarm(!warm)}
+              />{" "}
+              Warm country
+            </label>
 
-          <h2>Results</h2>
-          {suggestions.map((s, index) => (
-            <div key={index}>
-              <h3>{s.destination}</h3>
-              <p>{s.description}</p>
-            </div>
-          ))}
+            <br />
 
-          <br />
-          <button onClick={logout}>Logout</button>
-        </>
-      )}
+            <label>
+              <input
+                type="checkbox"
+                checked={beach}
+                onChange={() => setBeach(!beach)}
+              />{" "}
+              Beach
+            </label>
+
+            <input
+              style={styles.input}
+              type="number"
+              value={days}
+              onChange={e => setDays(Number(e.target.value))}
+              placeholder="Days"
+            />
+
+            <input
+              style={styles.input}
+              value={comfortLevel}
+              onChange={e => setComfortLevel(e.target.value)}
+              placeholder="Comfort level"
+            />
+
+            <button style={styles.button} onClick={getSuggestions}>
+              Get Suggestions
+            </button>
+
+            {suggestions.map((s, i) => (
+              <div key={i} style={styles.resultCard}>
+                <h4>{s.destination}</h4>
+                <p>{s.description}</p>
+              </div>
+            ))}
+
+            <button
+              style={{ ...styles.button, background: "#dc2626" }}
+              onClick={logout}
+            >
+              Logout
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
