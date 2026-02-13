@@ -5,19 +5,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ----------------- Add Services -----------------
 
-// Add Controllers
 builder.Services.AddControllers();
 
-// ✅ Configure Postgres
+// Postgres
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-// ✅ Add Swagger
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ✅ Configure CORS for your frontend
+// ✅ CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -28,18 +27,15 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-
-
 // ----------------- Build App -----------------
+
 var app = builder.Build();
 
-// ✅ Use Swagger in dev + prod
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// ✅ Use CORS (order matters!)
-app.UseCors("AllowReact");
+// ✅ IMPORTANT: use the SAME name
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
