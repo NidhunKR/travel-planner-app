@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
-const API = "https://travel-planner-backend.onrender.com"; // ✅ local backend
+// ✅ Correct backend URL (NO trailing slash)
+const API = "https://travel-planner-backend-kaym.onrender.com";
 
 function App() {
   // ---------- AUTH STATE ----------
