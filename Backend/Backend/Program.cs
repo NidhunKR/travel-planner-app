@@ -20,14 +20,16 @@ builder.Services.AddSwaggerGen();
 // ✅ Configure CORS for your frontend
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000") // your React dev URL
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
+
+
+
 
 // ----------------- Build App -----------------
 var app = builder.Build();
