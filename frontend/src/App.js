@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const API = "https://localhost:7234"; // ✅ local backend
+const API = "https://travel-planner-backend.onrender.com"; // ✅ local backend
 
 function App() {
   // ---------- AUTH STATE ----------
