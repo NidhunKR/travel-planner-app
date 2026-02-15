@@ -12,6 +12,7 @@ setDays,
 setComfortLevel,
 getSuggestions,
 suggestions,
+history,
 getHistory,
 logout
 
@@ -92,6 +93,14 @@ return (
   <button onClick={getHistory}>
   Show History
 </button>
+
+{history.map((h, i) => (
+  <div key={i} style={styles.resultCard}>
+    <h4>{h.destination}</h4>
+    <p>{h.description}</p>
+  </div>
+))}
+
 
 
   <button

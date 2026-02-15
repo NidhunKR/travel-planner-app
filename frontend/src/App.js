@@ -11,6 +11,8 @@ function App() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [history, setHistory] = React.useState([]);
+
 
 
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -74,24 +76,14 @@ const getHistory = async () => {
       "https://travel-planner-backend-kaym.onrender.com/api/Travel/history"
     );
 
-    if (!response.ok) {
-      throw new Error("Server error: " + response.status);
-    }
+    const data = await response.json();
 
-    const text = await response.text();
-
-    if (!text) {
-      console.log("Empty response from server");
-      return;
-    }
-
-    const data = JSON.parse(text);
-
-    console.log(data);
+    setHistory(data); // ⭐ THIS IS THE IMPORTANT LINE
   } catch (error) {
-    console.error("History error:", error);
+    console.error("Error loading history:", error);
   }
 };
+
 
 
 
@@ -175,6 +167,7 @@ const getHistory = async () => {
             setComfortLevel={setComfortLevel}
             getSuggestions={getSuggestions}
             suggestions={suggestions}
+            history={history}
             getHistory={getHistory}
             logout={logout}
           />
