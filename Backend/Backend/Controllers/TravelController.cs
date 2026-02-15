@@ -1,8 +1,8 @@
 ﻿using Backend.Data;
 using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TravelPlannerAPI.Models;
-
 
 namespace TravelPlannerAPI.Controllers
 {
@@ -16,53 +16,49 @@ namespace TravelPlannerAPI.Controllers
         {
             _context = context;
         }
+
+        // ✅ GET SUGGESTIONS + SAVE TO DB
         [HttpPost("suggestions")]
-        public IActionResult GetSuggestions(TravelRequest request)
+        public async Task<IActionResult> GetSuggestions([FromBody] TravelRequest request)
         {
-            var trips = new List<Trip>
-    {
-        new Trip { Destination = "Bali", Description = "Warm beaches and relaxed vibe", UserId = 1 },
-        new Trip { Destination = "Maldives", Description = "Luxury beach comfort", UserId = 1 },
-        new Trip { Destination = "Thailand", Description = "Affordable and fun", UserId = 1 }
-    };
+            var suggestions = new List<TravelHistory>();
 
-            _context.Trips.AddRange(trips);
-            _context.SaveChanges();
+            if (request.Warm && request.Beach)
+            {
+                suggestions.Add(new TravelHistory
+                {
+                    UserId = 1,
+                    Destination = "Bali",
+                    Description = "Warm beaches and relaxed vibe"
+                });
 
-            return Ok(trips);
+                suggestions.Add(new TravelHistory
+                {
+                    UserId = 1,
+                    Destination = "Maldives",
+                    Description = "Luxury beach comfort"
+                });
+            }
+
+            suggestions.Add(new TravelHistory
+            {
+                UserId = 1,
+                Destination = "Thailand",
+                Description = "Affordable and fun"
+            });
+
+            _context.TravelHistories.AddRange(suggestions);
+            await _context.SaveChangesAsync();
+
+            return Ok(suggestions);
         }
 
-
-
-        //[HttpPost("suggestions")]
-        //public IActionResult GetSuggestions([FromBody] TravelRequest request)
-        //{
-        //    var suggestions = new List<object>();
-
-        //    if (request.Warm && request.Beach)
-        //    {
-        //        suggestions.Add(new
-        //        {
-        //            destination = "Bali",
-        //            description = "Warm weather, beaches, relaxed and comfortable"
-        //        });
-
-        //        suggestions.Add(new
-        //        {
-        //            destination = "Maldives",
-        //            description = "Luxury beach destination with comfort"
-        //        });
-        //    }
-
-        //    suggestions.Add(new
-        //    {
-        //        destination = "Thailand",
-        //        description = "Affordable, warm and fun"
-        //    });
-
-        //    return Ok(suggestions);
-        //}
-
-
+        // ✅ GET HISTORY
+        [HttpGet("history")]
+        public async Task<IActionResult> GetHistory()
+        {
+            var history = await _context.TravelHistories.ToListAsync();
+            return Ok(history);
+        }
     }
 }
