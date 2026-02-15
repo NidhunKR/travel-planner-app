@@ -12,6 +12,7 @@ setDays,
 setComfortLevel,
 getSuggestions,
 suggestions,
+getHistory,
 logout
 
 }) {
@@ -87,6 +88,11 @@ return (
       <p>{s.description}</p>
     </div>
   ))}
+
+  <button onClick={getHistory}>
+  Show History
+</button>
+
 
   <button
     style={{ ...styles.button, background: "#dc2626" }}

@@ -68,6 +68,32 @@ const login = async () => {
     setMessage("Backend not reachable");
   }
 };
+const getHistory = async () => {
+  try {
+    const response = await fetch(
+      "https://travel-planner-backend-kaym.onrender.com/api/Travel/history"
+    );
+
+    if (!response.ok) {
+      throw new Error("Server error: " + response.status);
+    }
+
+    const text = await response.text();
+
+    if (!text) {
+      console.log("Empty response from server");
+      return;
+    }
+
+    const data = JSON.parse(text);
+
+    console.log(data);
+  } catch (error) {
+    console.error("History error:", error);
+  }
+};
+
+
 
 
   const logout = () => {
@@ -149,6 +175,7 @@ const login = async () => {
             setComfortLevel={setComfortLevel}
             getSuggestions={getSuggestions}
             suggestions={suggestions}
+            getHistory={getHistory}
             logout={logout}
           />
         )}
