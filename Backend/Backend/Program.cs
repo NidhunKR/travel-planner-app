@@ -3,23 +3,23 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ----------------- Add Services -----------------
+// ----------------- Services -----------------
 
 builder.Services.AddControllers();
 
-// Postgres
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseNpgsql(
+        "Host=ep-raspy-wildflower-a1107lh5-pooler.ap-southeast-1.aws.neon.tech;Port=5432;Database=neondb;Username=neondb_owner;Password=npg_Rf3YDBjxX2vK;SSL Mode=Require;Trust Server Certificate=true"
+    )
 );
 
-// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // ✅ CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
         policy.AllowAnyOrigin()
               .AllowAnyHeader()
@@ -27,15 +27,14 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ----------------- Build App -----------------
+// ----------------- App -----------------
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// ✅ IMPORTANT: use the SAME name
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend"); // ✅ ONLY THIS
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
