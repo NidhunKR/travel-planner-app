@@ -35,7 +35,7 @@ function App() {
       const response = await fetch(`${API}api/Auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, passwordHash: password })
+        body: JSON.stringify({ email:email, password: password })
       });
 
       const text = await response.text();
