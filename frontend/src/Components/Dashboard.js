@@ -2,117 +2,158 @@ import React from "react";
 
 function Dashboard({
   loading,
-warm,
-beach,
-days,
-comfortLevel,
-setWarm,
-setBeach,
-setDays,
-setComfortLevel,
-getSuggestions,
-suggestions,
-history,
-getHistory,
-logout
-
+  warm,
+  beach,
+  days,
+  comfortLevel,
+  setWarm,
+  setBeach,
+  setDays,
+  setComfortLevel,
+  getSuggestions,
+  suggestions,
+  history,
+  getHistory,
+  logout
 }) {
-const styles = {
-section: {
-marginBottom: "15px"
-},
-button: {
-width: "100%",
-padding: "12px",
-borderRadius: "8px",
-border: "none",
-background: "#4f46e5",
-color: "white",
-fontWeight: "bold",
-cursor: "pointer",
-marginTop: "10px"
-},
-resultCard: {
-background: "#eef2ff",
-padding: "12px",
-borderRadius: "8px",
-marginTop: "10px"
-}
-};
+  const styles = {
+    sectionTitle: {
+      marginTop: "20px",
+      marginBottom: "10px",
+      fontSize: "16px",
+      fontWeight: "bold"
+    },
+    checkboxRow: {
+      marginBottom: "8px"
+    },
+    input: {
+      width: "100%",
+      padding: "10px",
+      marginTop: "8px",
+      borderRadius: "8px",
+      border: "1px solid #ddd",
+      fontSize: "14px"
+    },
+    primaryButton: {
+      width: "100%",
+      padding: "12px",
+      borderRadius: "8px",
+      border: "none",
+      background: "#2563eb",
+      color: "white",
+      fontWeight: "bold",
+      cursor: "pointer",
+      marginTop: "15px"
+    },
+    secondaryButton: {
+      width: "100%",
+      padding: "10px",
+      borderRadius: "8px",
+      border: "none",
+      background: "#374151",
+      color: "white",
+      fontWeight: "bold",
+      cursor: "pointer",
+      marginTop: "15px"
+    },
+    logoutButton: {
+      width: "100%",
+      padding: "10px",
+      borderRadius: "8px",
+      border: "none",
+      background: "#dc2626",
+      color: "white",
+      fontWeight: "bold",
+      cursor: "pointer",
+      marginTop: "20px"
+    },
+    resultCard: {
+      background: "#f3f4f6",
+      padding: "12px",
+      borderRadius: "10px",
+      marginTop: "10px",
+      boxShadow: "0 3px 8px rgba(0,0,0,0.05)"
+    }
+  };
 
-return (
-<> <h3>Travel Preferences</h3>
+  return (
+    <>
+      <div style={styles.sectionTitle}>Travel Preferences</div>
 
+      <div style={styles.checkboxRow}>
+        <label>
+          <input
+            type="checkbox"
+            checked={warm}
+            onChange={() => setWarm(!warm)}
+          />{" "}
+          Warm country
+        </label>
+      </div>
 
-  <div style={styles.section}>
-    <label>
+      <div style={styles.checkboxRow}>
+        <label>
+          <input
+            type="checkbox"
+            checked={beach}
+            onChange={() => setBeach(!beach)}
+          />{" "}
+          Beach
+        </label>
+      </div>
+
       <input
-        type="checkbox"
-        checked={warm}
-        onChange={() => setWarm(!warm)}
-      />{" "}
-      Warm country
-    </label>
-  </div>
+        style={styles.input}
+        type="number"
+        value={days}
+        onChange={(e) => setDays(Number(e.target.value))}
+        placeholder="Number of days"
+      />
 
-  <div style={styles.section}>
-    <label>
       <input
-        type="checkbox"
-        checked={beach}
-        onChange={() => setBeach(!beach)}
-      />{" "}
-      Beach
-    </label>
-  </div>
+        style={styles.input}
+        value={comfortLevel}
+        onChange={(e) => setComfortLevel(e.target.value)}
+        placeholder="Comfort level (Luxury, Budget...)"
+      />
 
-  <input
-    type="number"
-    value={days}
-    onChange={e => setDays(Number(e.target.value))}
-    placeholder="Days"
-  />
+      <button style={styles.primaryButton} onClick={getSuggestions}>
+        {loading ? "Loading..." : "Get Suggestions"}
+      </button>
 
-  <input
-    value={comfortLevel}
-    onChange={e => setComfortLevel(e.target.value)}
-    placeholder="Comfort level"
-  />
+      {suggestions.length > 0 && (
+        <>
+          <div style={styles.sectionTitle}>Suggestions</div>
+          {suggestions.map((s, i) => (
+            <div key={i} style={styles.resultCard}>
+              <strong>{s.destination}</strong>
+              <p style={{ margin: "5px 0 0 0" }}>{s.description}</p>
+            </div>
+          ))}
+        </>
+      )}
 
-  <button style={styles.button} onClick={getSuggestions}>
-    {loading ? "Loading..." : "Get Suggestions"}
-  </button>
+      <button style={styles.secondaryButton} onClick={getHistory}>
+        Show History
+      </button>
 
-  {suggestions.map((s, i) => (
-    <div key={i} style={styles.resultCard}>
-      <h4>{s.destination}</h4>
-      <p>{s.description}</p>
-    </div>
-  ))}
+      {history.length > 0 && (
+        <>
+          <div style={styles.sectionTitle}>History</div>
+          {history.map((h, i) => (
+            <div key={i} style={styles.resultCard}>
+              <strong>{h.destination}</strong>
+              <p style={{ margin: "5px 0 0 0" }}>{h.description}</p>
+            </div>
+          ))}
+        </>
+      )}
 
-  <button onClick={getHistory}>
-  Show History
-</button>
-
-{history.map((h, i) => (
-  <div key={i} style={styles.resultCard}>
-    <h4>{h.destination}</h4>
-    <p>{h.description}</p>
-  </div>
-))}
-
-
-
-  <button
-    style={{ ...styles.button, background: "#dc2626" }}
-    onClick={logout}
-  >
-    Logout
-  </button>
-</>
-
-
-);
+      <button style={styles.logoutButton} onClick={logout}>
+        Logout
+      </button>
+    </>
+  );
 }
 
 export default Dashboard;

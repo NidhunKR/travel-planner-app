@@ -134,29 +134,59 @@ const getHistory = async () => {
   // ---------- STYLES ----------
 
   const styles = {
-    page: {
-      minHeight: "100vh",
-      background: "#f5f7fb",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontFamily: "Arial"
-    },
-    card: {
-      background: "white",
-      padding: "30px",
-      borderRadius: "12px",
-      width: "420px",
-      boxShadow: "0 8px 20px rgba(0,0,0,0.1)"
-    }
-  };
+  page: {
+    minHeight: "100vh",
+    background: "linear-gradient(135deg, #1f2937, #111827)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "Segoe UI, sans-serif",
+    padding: "20px"
+  },
+  card: {
+    background: "#ffffff",
+    padding: "35px",
+    borderRadius: "16px",
+    width: "450px",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.25)"
+  },
+  title: {
+    textAlign: "center",
+    marginBottom: "20px",
+    fontSize: "26px"
+  },
+  button: {
+    width: "100%",
+    padding: "10px",
+    marginTop: "10px",
+    borderRadius: "8px",
+    border: "none",
+    backgroundColor: "#2563eb",
+    color: "white",
+    fontWeight: "bold",
+    cursor: "pointer"
+  },
+  input: {
+    width: "100%",
+    padding: "10px",
+    marginTop: "8px",
+    marginBottom: "10px",
+    borderRadius: "8px",
+    border: "1px solid #ddd"
+  },
+  sectionTitle: {
+    marginTop: "20px",
+    marginBottom: "10px",
+    fontWeight: "bold"
+  }
+};
 
   // ---------- UI ----------
 
   return (
     <div style={styles.page}>
       <div style={styles.card}>
-        <h1 style={{ textAlign: "center" }}>🌍 Travel Planner</h1>
+        <h1 style={styles.title}>🌍 Travel Planner</h1>
         <p style={{ color: "red" }}>{message}</p>
 
         {loading && <p>Loading...</p>}
