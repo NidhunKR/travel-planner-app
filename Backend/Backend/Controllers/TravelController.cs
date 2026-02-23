@@ -3,9 +3,12 @@ using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelPlannerAPI.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TravelPlannerAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TravelController : ControllerBase
@@ -21,20 +24,21 @@ namespace TravelPlannerAPI.Controllers
         [HttpPost("suggestions")]
         public async Task<IActionResult> GetSuggestions([FromBody] TravelRequest request)
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var suggestions = new List<TravelHistory>();
 
             if (request.Warm && request.Beach)
             {
                 suggestions.Add(new TravelHistory
                 {
-                    UserId = 1,
+                    UserId = userId,
                     Destination = "Bali",
                     Description = "Warm beaches and relaxed vibe"
                 });
 
                 suggestions.Add(new TravelHistory
                 {
-                    UserId = 1,
+                    UserId = userId,
                     Destination = "Maldives",
                     Description = "Luxury beach comfort"
                 });
@@ -42,7 +46,7 @@ namespace TravelPlannerAPI.Controllers
 
             suggestions.Add(new TravelHistory
             {
-                UserId = 1,
+                UserId = userId,
                 Destination = "Thailand",
                 Description = "Affordable and fun"
             });
@@ -57,7 +61,11 @@ namespace TravelPlannerAPI.Controllers
         [HttpGet("history")]
         public async Task<IActionResult> GetHistory()
         {
-            var history = await _context.TravelHistories.ToListAsync();
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var history = await _context.TravelHistories
+                .Where(h => h.UserId == userId)
+                .ToListAsync();
             return Ok(history);
         }
     }
