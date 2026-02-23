@@ -56,34 +56,44 @@ const login = async () => {
     const response = await fetch(`${API}api/Auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, passwordHash: password })
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
     });
 
-    const text = await response.text();
-    setMessage(text);
+    const data = await response.json();
 
     if (response.ok) {
-      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("token", data.token); // ⭐ SAVE TOKEN
       setIsLoggedIn(true);
+      setMessage("Login successful");
+    } else {
+      setMessage("Invalid email or password");
     }
+
   } catch {
     setMessage("Backend not reachable");
   }
 };
 const getHistory = async () => {
   try {
-    const response = await fetch(
-      "https://travel-planner-backend-kaym.onrender.com/api/Travel/history"
-    );
+    const token = localStorage.getItem("token"); // ⭐ GET TOKEN
+
+    const response = await fetch(`${API}api/Travel/history`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}` // ⭐ SEND TOKEN
+      }
+    });
 
     const data = await response.json();
+    setHistory(data);
 
-    setHistory(data); // ⭐ THIS IS THE IMPORTANT LINE
-  } catch (error) {
-    console.error("Error loading history:", error);
+  } catch {
+    setMessage("Failed to load history");
   }
 };
-
 
 
 
@@ -98,14 +108,20 @@ const getHistory = async () => {
   setLoading(true);
 
   try {
+    const token = localStorage.getItem("token");
+
     const response = await fetch(`${API}api/Travel/suggestions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
       body: JSON.stringify({ warm, beach, days, comfortLevel })
     });
 
     const data = await response.json();
     setSuggestions(data);
+
   } catch {
     setMessage("Failed to fetch suggestions");
   }

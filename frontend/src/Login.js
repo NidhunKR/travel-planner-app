@@ -6,9 +6,9 @@ const login = async () => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        email: email,
-        passwordHash: password
-      })
+  email: email,
+  password: password
+})
     });
 
     const text = await response.text();
